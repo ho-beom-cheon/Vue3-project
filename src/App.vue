@@ -1,9 +1,12 @@
 <template>
-<div class="name">{{ name }}</div>
+<div :class="nameClass">
+  {{ name2 }}
+</div>
 <div>{{ age }}</div>
+<input :type="type" :value="age">
 <button
   class="btn btn-primary"
-  v-on:click="updateName"
+  @click="updateName"
 >
 Click
 </button>
@@ -47,20 +50,29 @@ export default {
     const name = reactive({
       id : 1
     });
+    const name2 = ref('hoho');
     const age = ref(24);
+    const type = ref('number');
+    const nameClass = ref('name');
 
     // const greeting = (name) => {
     //   return 'Hello' + name;
     // }
 
     const updateName = () => {
-      name.id = 2
-      age.value = 11
+      name.id = 2;
+      age.value = 11;
+      type.value = 'text';
+      nameClass.value = 'name2';
+
     }
     return {
       updateName,
       name,
+      name2,
       age,
+      type,
+      nameClass,
     }
   }
 }
@@ -69,5 +81,8 @@ export default {
 <style>
   .name {
     color: blue;
+  }
+  .name2 {
+    color: red;
   }
 </style>
