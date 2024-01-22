@@ -1,16 +1,28 @@
 <template>
-  <input 
-    type="text" 
-    v-model="name"
-  >
-  <button
-    class="btn btn-primary"
-    @click="onSubmit"
-  >
-    Click
-  </button>
-  <div>
-    {{ name }}
+  <div class="container">
+    <h2>To-Do List</h2>
+    <form 
+      @submit.prevent="onSubmit"
+      class="d-flex"
+      >
+      <div class="flex-grow-1 mr-2">
+        <input 
+          class="form-control"
+          type="text" 
+          v-model="todo"
+          placeholder="Type new to-do"
+        >
+      </div>
+      <div>
+        <button
+          class="btn btn-primary"
+          type="submit"
+        >
+          Add
+        </button>
+      </div>
+    </form>
+    {{ todos }}
   </div>
 </template>
 
@@ -19,25 +31,28 @@ import {ref} from 'vue';
 
 export default {
   setup() {
-    const name = ref('hoho');
+    const todo = ref('');
+    const todos = ref([]);
 
     const onSubmit = () => {
-      console.log(name.value);
+      console.log(todo.value);
+      todos.value.push({
+        id: Date.now(),
+        subject : todo.value,
+      })
     }
-    // const updataName = (e) => {
-    //   name.value = e.target.value;
-    // }
+
     return {
       onSubmit,
-      // updataName,
-      name,
+      todos,
+      todo,
     }
   }
 }
 </script>
 
 <style>
-  .name {
+  .todo {
     color: blue;
   }
 </style>
