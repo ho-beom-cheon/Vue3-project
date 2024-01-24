@@ -12,6 +12,7 @@
 
   <div class="container">
     <h2>To-Do List</h2>
+    <TodoSimpleForm />
     <form @submit.prevent="onSubmit">
       <div class="d-flex">
         <div class="flex-grow-1 mr-2">
@@ -70,8 +71,12 @@
 
 <script>
 import {ref} from 'vue';
+import TodoSimpleForm from './components/TodoSimpleForm.vue';
 
 export default {
+  components : {
+    TodoSimpleForm
+  },
   setup() {
     const toggle = ref(false);
     const todo = ref('');
