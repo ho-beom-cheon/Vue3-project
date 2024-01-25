@@ -6,8 +6,7 @@
     <div v-if="!todos.length">
       추가된 ToDo가 없습니다.
     </div>
-
-    <TodoList :todos="todos"/>
+    <TodoList :todos="todos" @toggle-todo="toggleTodo" />
   </div>
 </template>
 
@@ -41,13 +40,20 @@ export default {
       todos.value.splice(index, 1);
     }
 
-    const onToggle = () => {
-      toggle.value = !toggle.value;
+    // const onToggle = () => {
+    //   toggle.value = !toggle.value;
+    // }
+
+    const toggleTodo = (index) =>{
+      console.log(todos.value[index]);
+      todos.value[index].completed = !todos.value[index].completed; 
+      console.log(todos.value[index]);
     }
 
     return {
-      onToggle,
+      // onToggle,
       deleteTodo,
+      toggleTodo,
       addTodo,
       todos,
       toggle,
