@@ -39,6 +39,22 @@ export default {
     
     const error = ref('');
 
+    const getTodo = async () => {
+      error.value = '';
+
+      try{
+        const res = await axios.get('http://localhost:3000/todos');
+        console.log(res);
+        todos.value = res.data;
+      } catch(e){
+        console.log(e);
+        error.value = '수행 중' + e + '오류가 발생했습니다.';
+      }
+    }
+
+    getTodo();
+
+
     const addTodo = async (todo) => {
       // 데이터베이스에 todo 저장
       error.value = '';
