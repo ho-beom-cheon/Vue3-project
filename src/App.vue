@@ -39,19 +39,21 @@ export default {
     
     const error = ref('');
 
-    const addTodo = (todo) => {
-      error.value = '';
+    const addTodo = async (todo) => {
       // 데이터베이스에 todo 저장
-      axios.post('http://localhost:3000/todos', {
-        subject: todo.subject,
-        completed: todo.completed,
-      }).then(res => {
-        console.log(res);
+      error.value = '';
+
+      try{
+        const res = await axios.post('http://localhost:3000/todos', {
+          subject: todo.subject,
+          completed: todo.completed,
+        });
         todos.value.push(res.data);
-      }).catch(e => {
+
+      } catch(e){
         console.log(e);
-        error.value = '수행 중' + error.value + '오류가 발생했습니다.';
-      })
+        error.value = '수행 중' + e + '오류가 발생했습니다.';
+      }
     }
 
     const deleteTodo = (index) => {
@@ -59,7 +61,6 @@ export default {
     }
 
     const toggleTodo = (index) =>{
-      console.log(todos.value[index]);
       todos.value[index].completed = !todos.value[index].completed; 
       console.log(todos.value[index]);
     }
@@ -75,22 +76,6 @@ export default {
         return todos.value;
     });
 
-
-    // # computed와 method의 차이점
-    // 1. method는 인자값을 받을 수 있다.
-    // 2. computed는 리액티브 state 값이 변경될때만 값을 변경 시킬 수 있다.
-    // 3. computed는 계산 된 값을 저장하고 있어서 여러번 호출하여도 계산되어 있는 값의 변경이 없으면 다시 computed를 수행하는게 아닌 저장된 값을 출력해준다.
-    //    (테스트로 method와 computed에 로그를 찍은 뒤 수행하면 computed는 두번 호출함에도 한번만 찍히고 method는 호출하는 만큼 찍히게 된다.)
-    // const count = ref(1);
-    // const doubleCountComputed = computed(() => {
-    //   console.log("computed");
-    //   return count.value * 2;
-    // })
-
-    // const doubleCountMethod = () => {
-    //   console.log("method");
-    //   return count.value * 2;
-    // }
 
     return {
       deleteTodo,
