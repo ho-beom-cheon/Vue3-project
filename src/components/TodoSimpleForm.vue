@@ -2,7 +2,12 @@
     <form @submit.prevent="onSubmit">
           <div class="d-flex">
             <div class="flex-grow-1 mr-2">
-
+              <input 
+                class="form-control"
+                type="text" 
+                v-model="todo"
+                placeholder="Type new to-do"
+              >
             </div>
             <div>
               <button
@@ -32,6 +37,8 @@ export default{
             if (todo.value === '') {
                 hasError.value = true;
             } else {
+                // 자식 -> 부모
+                // emit(부모컴포넌트로 보낼 때 이름, {보낼 오브젝트 값})
                 emit('add-todo', {
                     id: Date.now(),
                     subject: todo.value,

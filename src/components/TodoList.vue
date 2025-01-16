@@ -3,7 +3,7 @@
         v-for="(todo, index) in todos"
         :key="todo.id"
         class="card mt-2"
-        >
+    >
         <div class="card-body p-2 d-flex align-items-center">
         <div class="form-check flex-grow-1">
             <input 
@@ -31,6 +31,7 @@
 
 <script>
 export default {
+    // props : 부모 -> 자식
     props: {
         todos: {
             type: Array,
