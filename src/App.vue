@@ -87,9 +87,19 @@ export default {
       }
     }
 
-    const toggleTodo = (index) =>{
-      todos.value[index].completed = !todos.value[index].completed; 
-      console.log(todos.value[index]);
+    const toggleTodo = async (index) => {
+      error.value = '';
+      const id = todos.value[index].id;
+      try{
+        const res = await axios.patch('http://localhost:3000/todos/' + id,{
+          completed: !todos.value[index].completed,
+        });
+        console.log(res);
+        todos.value[index].completed = !todos.value[index].completed; 
+      } catch(e){
+        console.log(e);
+        error.value = '수행 중' + e + '오류가 발생했습니다.';
+      }
     }
 
     const searchText = ref('');
