@@ -39,6 +39,7 @@ export default {
     
     const error = ref('');
 
+    // ToDo 리스트 조회 선언
     const getTodo = async () => {
       error.value = '';
 
@@ -52,11 +53,11 @@ export default {
       }
     }
 
+    // ToDo 리스트 조회 호출
     getTodo();
 
-
+    // ToDo 리스트 등록 저장
     const addTodo = async (todo) => {
-      // 데이터베이스에 todo 저장
       error.value = '';
 
       try{
@@ -72,8 +73,18 @@ export default {
       }
     }
 
-    const deleteTodo = (index) => {
-      todos.value.splice(index, 1);
+    // ToDo 리스트 내용 삭제
+    const deleteTodo = async (index) => {
+      error.value = '';
+      const id = todos.value[index].id;
+      try{
+        const res = await axios.delete('http://localhost:3000/todos/' + id);
+        console.log(res);
+        todos.value.splice(index, 1);
+      } catch(e){
+        console.log(e);
+        error.value = '수행 중' + e + '오류가 발생했습니다.';
+      }
     }
 
     const toggleTodo = (index) =>{
