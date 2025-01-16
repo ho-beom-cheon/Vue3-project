@@ -18,6 +18,16 @@
       @toggle-todo="toggleTodo" 
       @delete-todo="deleteTodo"
     />
+    <hr />
+    <nav aria-label="Page navigation example">
+      <ul class="pagination">
+        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+        <li class="page-item"><a class="page-link" href="#">1</a></li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+      </ul>
+    </nav>
   </div>
 </template>
 
@@ -34,22 +44,24 @@ export default {
   },
   setup() {
     const toggle = ref(false);
-    
-    const todos = ref([]);
-    
+    const todos = ref([]);  
     const error = ref('');
 
+    const totalPage = ref(0);
+    const limit = 5;
+    const page = ref(1);
     // ToDo 리스트 조회 선언
     const getTodo = async () => {
       error.value = '';
 
       try{
-        const res = await axios.get('http://localhost:3000/todos');
+        const res = await axios.get(`http://localhost:3000/todos?_page=${page.value}&_limit=${limit}`);
         console.log(res);
+        totalPage.value = res.headers['x-total-count']
         todos.value = res.data;
       } catch(e){
         console.log(e);
-        error.value = '수행 중' + e + '오류가 발생했습니다.';
+        error.value = '수행 중 [' + e + '] 오류가 발생했습니다.';
       }
     }
 
@@ -69,7 +81,7 @@ export default {
 
       } catch(e){
         console.log(e);
-        error.value = '수행 중' + e + '오류가 발생했습니다.';
+        error.value = '수행 중 [' + e + '] 오류가 발생했습니다.';
       }
     }
 
@@ -83,10 +95,11 @@ export default {
         todos.value.splice(index, 1);
       } catch(e){
         console.log(e);
-        error.value = '수행 중' + e + '오류가 발생했습니다.';
+        error.value = '수행 중 [' + e + '] 오류가 발생했습니다.';
       }
     }
 
+    // ToDo 리스트 Check Box toggle
     const toggleTodo = async (index) => {
       error.value = '';
       const id = todos.value[index].id;
@@ -98,7 +111,7 @@ export default {
         todos.value[index].completed = !todos.value[index].completed; 
       } catch(e){
         console.log(e);
-        error.value = '수행 중' + e + '오류가 발생했습니다.';
+        error.value = '수행 중 [' + e + '] 오류가 발생했습니다.';
       }
     }
 
