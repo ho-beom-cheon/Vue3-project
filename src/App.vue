@@ -21,11 +21,20 @@
     <hr />
     <nav aria-label="Page navigation example">
       <ul class="pagination">
-        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-        <li class="page-item"><a class="page-link" href="#">1</a></li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
-        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+        <li class="page-item" v-if="currentPage !== 1">
+          <a style="cursor: pointer" class="page-link" @click="getTodos(currentPage - 1)">Previous</a>
+        </li>
+        <li 
+            v-for="page in numberOfPages"
+            :key="page"
+            class="page-item"
+            :class="currentPage === page ? 'active' : ''"
+            >
+          <a style="cursor: pointer" class="page-link" @click="getTodos(page)">{{ page }}</a>
+        </li>
+        <li class="page-item" v-if="numberOfPages !== currentPage">
+          <a style="cursor: pointer" class="page-link" @click="getTodos(currentPage + 1)">Next</a>
+        </li>
       </ul>
     </nav>
   </div>
@@ -43,21 +52,25 @@ export default {
     TodoList
   },
   setup() {
-    const toggle = ref(false);
     const todos = ref([]);  
     const error = ref('');
 
-    const totalPage = ref(0);
+    const numberOfTodos = ref(0);
     const limit = 5;
-    const page = ref(1);
-    // ToDo 리스트 조회 선언
-    const getTodo = async () => {
-      error.value = '';
+    const currentPage = ref(1);
 
+    const numberOfPages = computed(() => {
+        return Math.ceil(numberOfTodos.value/limit);
+    });
+
+    // ToDo 리스트 조회 선언
+    const getTodos = async (page = currentPage.value) => {
+      currentPage.value = page;
       try{
-        const res = await axios.get(`http://localhost:3000/todos?_page=${page.value}&_limit=${limit}`);
-        console.log(res);
-        totalPage.value = res.headers['x-total-count']
+        const res = await axios.get(
+          `http://localhost:3000/todos?_page=${page}&_limit=${limit}`
+        );
+        numberOfTodos.value = res.headers['x-total-count'];
         todos.value = res.data;
       } catch(e){
         console.log(e);
@@ -66,7 +79,7 @@ export default {
     }
 
     // ToDo 리스트 조회 호출
-    getTodo();
+    getTodos();
 
     // ToDo 리스트 등록 저장
     const addTodo = async (todo) => {
@@ -132,10 +145,12 @@ export default {
       toggleTodo,
       addTodo,
       todos,
-      toggle,
       searchText,
       filteredTodos,
       error,
+      numberOfPages,
+      currentPage,
+      getTodos,
     }
   }
 }
