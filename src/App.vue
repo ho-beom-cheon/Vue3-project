@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { ref, computed } from 'vue';
+import { ref, computed, watchEffect } from 'vue';
 import TodoSimpleForm from './components/TodoSimpleForm.vue';
 import TodoList from './components/TodoList.vue';
 import axios from 'axios';
@@ -56,8 +56,14 @@ export default {
     const error = ref('');
 
     const numberOfTodos = ref(0);
-    const limit = 5;
+    let limit = 5;
     const currentPage = ref(1);
+
+    watchEffect(() => {
+      console.log(limit);
+    });
+
+    limit = 1;
 
     const numberOfPages = computed(() => {
         return Math.ceil(numberOfTodos.value/limit);
