@@ -10,11 +10,11 @@
     <hr />
     <TodoSimpleForm @add-todo="addTodo"/>    
     <div style="color: red;">{{ error }}</div>
-    <div v-if="!filteredTodos.length">
+    <div v-if="!todos.length">
       There is nothing to display
     </div>
     <TodoList 
-      :todos="filteredTodos" 
+      :todos="todos" 
       @toggle-todo="toggleTodo" 
       @delete-todo="deleteTodo"
     />
@@ -57,10 +57,7 @@ export default {
     const numberOfTodos = ref(0);
     let limit = 5;
     const currentPage = ref(1);
-
-    watch([currentPage, numberOfTodos], (currentPage, prev) => {
-      console.log(currentPage, prev);
-    });
+    const searchText = ref('');
 
     const numberOfPages = computed(() => {
         return Math.ceil(numberOfTodos.value/limit);
@@ -71,7 +68,7 @@ export default {
       currentPage.value = page;
       try{
         const res = await axios.get(
-          `http://localhost:3000/todos?_page=${page}&_limit=${limit}`
+          `http://localhost:3000/todos?_sort=id&_order=desc&subject_like=${searchText.value}&_page=${page}&_limit=${limit}`
         );
         numberOfTodos.value = res.headers['x-total-count'];
         todos.value = res.data;
@@ -89,11 +86,11 @@ export default {
       error.value = '';
 
       try{
-        const res = await axios.post('http://localhost:3000/todos', {
+        await axios.post('http://localhost:3000/todos', {
           subject: todo.subject,
           completed: todo.completed,
         });
-        todos.value.push(res.data);
+        getTodos(1);
 
       } catch(e){
         console.log(e);
@@ -106,9 +103,8 @@ export default {
       error.value = '';
       const id = todos.value[index].id;
       try{
-        const res = await axios.delete('http://localhost:3000/todos/' + id);
-        console.log(res);
-        todos.value.splice(index, 1);
+        await axios.delete('http://localhost:3000/todos/' + id);
+        getTodos(1);
       } catch(e){
         console.log(e);
         error.value = '수행 중 [' + e + '] 오류가 발생했습니다.';
@@ -131,16 +127,18 @@ export default {
       }
     }
 
-    const searchText = ref('');
-    const filteredTodos = computed(() => {
-        if(searchText.value) {
-          return todos.value.filter(todo => {
-             return todo.subject.includes(searchText.value);
-          });
-        }
+    watch(searchText, () => {
+      getTodos(1);
+    }) 
+    // const filteredTodos = computed(() => {
+    //     if(searchText.value) {
+    //       return todos.value.filter(todo => {
+    //          return todo.subject.includes(searchText.value);
+    //       });
+    //     }
 
-        return todos.value;
-    });
+    //     return todos.value;
+    // });
 
 
     return {
@@ -149,7 +147,7 @@ export default {
       addTodo,
       todos,
       searchText,
-      filteredTodos,
+      // filteredTodos,
       error,
       numberOfPages,
       currentPage,
