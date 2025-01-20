@@ -6,6 +6,7 @@
       type="text" 
       v-model="searchText"
       placeholder="Search"
+      @keyup.enter="searchTodo"
     >
     <hr />
     <TodoSimpleForm @add-todo="addTodo"/>    
@@ -127,19 +128,19 @@ export default {
       }
     }
 
-    watch(searchText, () => {
+    let timeout = null;
+    
+    const searchTodo = () => {
+      clearTimeout(timeout);
       getTodos(1);
+    };
+
+    watch(searchText, () => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        getTodos(1);
+      }, 1000)
     }) 
-    // const filteredTodos = computed(() => {
-    //     if(searchText.value) {
-    //       return todos.value.filter(todo => {
-    //          return todo.subject.includes(searchText.value);
-    //       });
-    //     }
-
-    //     return todos.value;
-    // });
-
 
     return {
       deleteTodo,
@@ -152,6 +153,7 @@ export default {
       numberOfPages,
       currentPage,
       getTodos,
+      searchTodo,
     }
   }
 }
