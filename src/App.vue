@@ -1,6 +1,6 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <router-link class="navbar-brand" to="/">Kossie Coder</router-link>
+    <router-link class="navbar-brand" to="/">Hobeom</router-link>
 
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
