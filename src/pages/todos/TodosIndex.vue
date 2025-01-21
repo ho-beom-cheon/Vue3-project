@@ -114,15 +114,15 @@
       }
   
       // ToDo 리스트 Check Box toggle
-      const toggleTodo = async (index) => {
+      const toggleTodo = async (index, checked) => {
         error.value = '';
         const id = todos.value[index].id;
         try{
           const res = await axios.patch('http://localhost:3000/todos/' + id,{
-            completed: !todos.value[index].completed,
+            completed: checked,
           });
           console.log(res);
-          todos.value[index].completed = !todos.value[index].completed; 
+            todos.value[index].completed = checked;
         } catch(e){
           console.log(e);
           error.value = '수행 중 [' + e + '] 오류가 발생했습니다.';

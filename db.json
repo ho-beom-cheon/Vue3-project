@@ -72,17 +72,17 @@
     },
     {
       "subject": "15번",
-      "completed": false,
+      "completed": true,
       "id": 15
     },
     {
       "subject": "16번",
-      "completed": false,
+      "completed": true,
       "id": 16
     },
     {
       "subject": "17번",
-      "completed": false,
+      "completed": true,
       "id": 17
     }
   ]
