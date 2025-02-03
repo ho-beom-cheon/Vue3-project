@@ -4,12 +4,37 @@
         Loding...
     </div>
     <form v-else>
-        <div class="form-group">
-            <label>Todo Subject</label>
-            <input type="text" class="form-control">
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <label>Subject</label>
+                    <input v-model="todo.subject" type="text" class="form-control">
+                </div>
+            </div>
+            <div class="col-6">
+                <div clas="form-group">
+                    <label>Status</label>
+                    <div>
+                        <button 
+                            class="btn" 
+                            type="button"
+                            :class="todo.completed ? 'btn-success' : 'btn-danger'"
+                            @click="toggleTodoStatus"
+                        >
+                            {{ todo.completed ? 'Completed' : 'InCompleted' }}
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
-        <button class="btn btn-primary">
+        <button type="submit" class="btn btn-primary">
             Save
+        </button>
+        <button 
+            class="btn btn-outline-dark ml-2"
+            @click="moveToTodoListPage"
+        >
+            Cancle
         </button>
     </form>
 </template>
@@ -18,6 +43,7 @@
     import { useRoute } from 'vue-router'; 
     import axios from 'axios';
     import { ref } from 'vue';
+import router from '@/router';
 
     export default {
         setup() {
@@ -33,10 +59,25 @@
                 todo.value = res.data;
                 loding.value = false;
             };
-            getTodo()
 
+            const toggleTodoStatus = () => {
+                todo.value.completed = !todo.value.completed;
+            };
+
+            const moveToTodoListPage = () => {
+                router.push({
+                    name: 'Todos'
+                })
+            };
+
+            getTodo()
+            return{
+                todo,
+                loding,
+                toggleTodoStatus,
+                moveToTodoListPage,
+            }
         }
-        
     }
 
     
