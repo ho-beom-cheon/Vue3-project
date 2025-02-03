@@ -30,7 +30,11 @@
                 </div>
             </div>
         </div>
-        <button type="submit" class="btn btn-primary">
+        <button 
+            type="submit" 
+            class="btn btn-primary"
+            :disabled="!todoUpdated"
+        >
             Save
         </button>
         <button 
@@ -45,13 +49,15 @@
 <script>
     import { useRoute } from 'vue-router'; 
     import axios from 'axios';
-    import { ref } from 'vue';
-import router from '@/router';
+    import { ref, computed } from 'vue';
+    import router from '@/router';
+    import _ from 'lodash'
 
     export default {
         setup() {
             const route = useRoute();
             const todo = ref(null);
+            const originalTodo = ref(null);
             const loding = ref(true);
             const todoId = route.params.id;
 
@@ -60,9 +66,15 @@ import router from '@/router';
                 console.log(route.params.id);
                 console.log(res);
 
-                todo.value = res.data;
+                todo.value = {...res.data};
+                originalTodo.value = {...res.data};
+
                 loding.value = false;
             };
+
+            const todoUpdated = computed(() => {
+                return !_.isEqual(todo.value, originalTodo.value);
+            });
 
             const toggleTodoStatus = () => {
                 todo.value.completed = !todo.value.completed;
@@ -89,6 +101,7 @@ import router from '@/router';
                 toggleTodoStatus,
                 moveToTodoListPage,
                 onSave,
+                todoUpdated,
             }
         }
     }
